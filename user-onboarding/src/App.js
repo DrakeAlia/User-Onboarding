@@ -1,16 +1,13 @@
-import React from 'react';
-import logo from './logo.svg';
-import Form from './components/form.component'
-import './App.css';
+import React from "react";
+import "./App.css";
+import Forms from "./Forms";
 
 function App() {
   return (
-        <div>
+    <div className="App">
+      <Forms />
+    </div>
+  );
+}
 
-          <Form />
-
-        </div>
-      );
-    }
-    
-    export default App;
+export default App;

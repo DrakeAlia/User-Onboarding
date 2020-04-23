@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from "axios"
 import * as yup from "yup"
-import styled from 'styled-components'
-import "./form.styles.css"
+
 
 
 
@@ -18,44 +17,8 @@ const formSchema = yup.object().shape({
     // positions: yup.string()
 })
 
-const Button = styled.button`
-/* Adapt the colors based on primary prop */
-    background: rgb(219, 112, 147);
-    color: white;
-    font-size: 1em;
-    margin: 1em;
-    padding: 0.25em 1em;
-    border: 2px solid rgb(219, 112, 147);
-    border-radius: 3px;
-`;
 
 
-const Body = styled.div`
-    display: flex;
-    align-items:center;
-    background-color: skyblue;
-    height: 20vh;
-    border: 2px solid grey;
-    width: 30%;
-    margin: 4% auto 0 auto;
-    padding: 3%;
-`;
-const Pre = styled.pre`
-    display: flex;
-    align-items:center;
-    justify-content: center;
-    background-color: skyblue;
-    /* height: 50vh; */
-    border: 2px solid grey;
-    width: 30%;
-    margin: 3% auto;
-    padding: 3%;
-`
-
-
-// backgroundImage = "url('img_tree.png');
-
-const Form =(props) =>{
 
 
 
