@@ -80,9 +80,7 @@ const Form =(props) =>{
         })
     },[formState])
 
-
-
-
+    // Craft a `POST` request using `axios` that sends your form data to the following endpoint: _https://reqres.in/api/users_
     const handleSubmit = event => {
         event.preventDefault();
         axios
@@ -90,7 +88,7 @@ const Form =(props) =>{
             .then(res => {
                 setPost([...post, res.data]);
                 console.log("success", post)
-
+// Set up a state property called `users` that is initialized with an empty array
             setFormState({
                 name:"", 
                 email: "",
@@ -101,7 +99,7 @@ const Form =(props) =>{
         })
         .catch(err => console.log(err.response))
     }
-
+// Using Yup, set up _at least_ two different validations along with custom error messages that will display on screen when validation fails.
     const validateChange = event => {
         yup
             .reach(formSchema, event.target.name)
@@ -135,6 +133,7 @@ const Form =(props) =>{
     return (
         <div>
          <Body >
+{/* Every time you make a `POST` request, and get that new user data back, update your `users` state with the new user added to the array */}         
             <form onSubmit={handleSubmit}>
             <label htmlFor="name">
             Full Name
@@ -194,6 +193,7 @@ const Form =(props) =>{
 
         </form>
         </Body>
+        {/* Render `users` in your app. You can use the html pre tag and JSON.stringify() method to display your post request. */}
             <Pre>{JSON.stringify(post, null, 2)}</Pre>
         </div>
 
