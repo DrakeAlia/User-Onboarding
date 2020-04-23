@@ -1,175 +1,146 @@
-import React, { useState, useEffect } from 'react'
-import axios from "axios"
-import * as yup from "yup"
-
-
-
-
+import React, { useState, useEffect } from "react";
+import * as yup from "yup";
+import axios from "axios";
 
 const formSchema = yup.object().shape({
-    name: yup.string().required("Name is a required field."),
-    email: yup
-      .string()
-      .email("Must be a valid email address")
-      .required("Must include email address"),
-    password: yup.string().required("Password is a required field").min(4, "your password needs more 4 letters").matches(/(^(?=.*[!@#$%^&*]))/, "Your Password is required special characters"),
-    terms: yup.boolean().oneOf([true], "Please agree to terms of use"),
-    // positions: yup.string()
-})
+  name: yup.string().required("Name is required"),
+  email: yup
+    .string()
+    .email("Must be a valid email")
+    .required("Email is required"),
+  password: yup.string().required("Must include password"),
+  terms: yup.boolean().oneOf([true], "please agree to the terms")
+});
 
+const Forms = () => {
+  const [buttonDisabled, setButtonDisabled] = useState(true);
 
+  //state for form inputs
+  const [formState, setFormState] = useState({
+    name: "",
+    email: "",
+    password: "",
+    terms: ""
+  });
+  // state for errors
+  const [errors, setErrors] = useState({
+    name: "",
+    email: "",
+    password: "",
+    terms: ""
+  });
+  // state to set the post request
+  const [post, setPost] = useState([]);
 
-
-
-
-    const [formState, setFormState] = useState({
-        name: "",
-        email: "",
-        password: "",
-        terms:"",
-        // position: ""
+  useEffect(() => {
+    formSchema.isValid(formState).then(valid => {
+      setButtonDisabled(!valid);
     });
+  }, [formState]);
 
-    const [errors, setErrors] = useState({
-        name: "",
-        email: "",
-        password: "",
-        terms:"",
-        // position: ""
-    });
+  const formSubmit = e => {
+    e.preventDefault();
+    axios
+      .post("https://reqres.in/api/users", formState)
+      .then(res => {
+        setPost(res.data);
+        console.log("success", post);
+        setFormState({
+          name: "",
+          email: "",
+          password: "",
+          terms: ""
+        });
+      })
+      .catch(err => console.log(err.response));
+  };
 
-    const [post, setPost] = useState([]);
+  const validateChange = e => {
+    //Reach will allow us to "reach" into schema and test only part
+    yup
+      .reach(formSchema, e.target.name)
+      .validate(e.target.value || e.target.checked)
+      .then(valid => {
+        setErrors({
+          ...errors,
+          [e.target.name]: ""
+        });
+      })
+      .catch(err => {
+        setErrors({
+          ...errors,
+          [e.target.name]: err.errors[0]
+        });
+      });
+  };
 
-    const [buttonDisabled, setButtonDisabled] = useState(true);
-
-    useEffect(() => {
-        formSchema.isValid(formState)
-        .then(valid => {
-            setButtonDisabled(!valid);
-        })
-    },[formState])
-
-
-
-
-    const handleSubmit = event => {
-        event.preventDefault();
-        axios
-            .post("https://reqres.in/api/users", formState)
-            .then(res => {
-                setPost([...post, res.data]);
-                console.log("success", post)
-
-            setFormState({
-                name:"", 
-                email: "",
-                password:"",
-                terms:"",
-                // position: ""
-            });
-        })
-        .catch(err => console.log(err.response))
-    }
-
-    const validateChange = event => {
-        yup
-            .reach(formSchema, event.target.name)
-            .validate(event.target.value)
-            .then(valid =>{
-                setErrors({
-                    ...errors,
-                    [event.target.name]: ""
-                });
-            })
-            .catch(err => {
-                setErrors({
-                    ...errors,
-                    [event.target.name]: err.errors[0]
-                });
-            });
+  const inputChange = e => {
+    e.persist();
+    const newFormData = {
+      ...formState,
+      [e.target.name]:
+        e.target.type === "checkbox" ? e.target.checked : e.target.value
     };
-    const handleChange = event => {
-        event.persist();
-        const newFormData= {
-            ...formState,
-            [event.target.name]:
-                event.target.type === "checkbox" ? event.target.checked
-                    : event.target.value
-        }
-        validateChange(event);
-        setFormState(newFormData)
+    validateChange(e);
+    setFormState(newFormData);
+  };
 
-      };
-      console.log(errors)
-    return (
-        <div>
-         <Body >
-            <form onSubmit={handleSubmit}>
-            <label htmlFor="name">
-            Full Name
-                <input 
-                    type="text"
-                    name="name"
-                    value={formState.name}
-                    onChange={handleChange}
-                />
-                {errors.name.length > 0 ? <p className="error">
-                {errors.name}</p> : null}
-                </label>
-                 <br />     
+  return (
+    <form onSubmit={formSubmit}>
+      <label htmlFor="name">
+        Name:
+        <input
+          type="text"
+          name="name"
+          placeholder="Name"
+          value={formState.name}
+          onChange={inputChange}
+        />
+      </label>
+      {errors.name.length > 0 ? <p className="error">{errors.name}</p> : null}
 
-            <label htmlFor="email">
-                 Email
-                <input 
-                    type="text"
-                    name="email"
-                    value={formState.email}
-                    onChange={handleChange}
-                />
-                {errors.email.length > 0 ? (
-                    <p className="error">{errors.email}</p>
-                ) : null }
-                </label>   
-                  <br />    
+      <label htmlFor="email">
+        Email:
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={formState.email}
+          onChange={inputChange}
+        />
+      </label>
+      {errors.email.length > 0 ? <p className="error">{errors.email}</p> : null}
 
-            <label htmlFor="password">
-            password
-                <input 
-                    type="password"
-                    name="password"
-                    value={formState.password}
-                    onChange={handleChange}
-                />
-                  {errors.password.length > 0 ? (
-                    <p className="error">{errors.password}</p>
-                ) : null }
-                </label>
-                  <br />
-            <label htmlFor="terms">
-                Terms & Condition
-                <input 
-                    type="checkbox"
-                    name="terms"
-                    checked={formState.terms}
-                    onChange={handleChange}
-                />
-                  {errors.terms = false ? (
-                    <p className="error">{errors.terms}</p>
-                ) : null }
-            </label>
-                    <br/>
-            <Button disabled={buttonDisabled}>Submit!</Button>
+      <label htmlFor="password">
+        Password:
+        <input
+          type="text"
+          name="password"
+          placeholder="Password"
+          value={formState.password}
+          onChange={inputChange}
+        />
+      </label>
+      {errors.password.length > 0 ? (
+        <p className="error">{errors.password}</p>
+      ) : null}
 
+      <label htmlFor="terms">
+        Check Box:
+        <input
+          type="checkbox"
+          name="terms"
+          checked={formState.terms}
+          onChange={inputChange}
+        />
+      </label>
 
-        </form>
-        </Body>
-            <Pre>{JSON.stringify(post, null, 2)}</Pre>
-        </div>
+      <pre>{JSON.stringify(post, null, 2)}</pre>
+      <button disabled={buttonDisabled} type="submit">
+        SUBMIT
+      </button>
+    </form>
+  );
+};
 
-
-
-    )
-}
-
-
-export default Form 
+export default Forms;
