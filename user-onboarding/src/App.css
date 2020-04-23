@@ -1,0 +1,16 @@
+body {
+  background-image: url(".");
+  margin: 0 auto;
+  height: 200vh;
+  width: 100%;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+/* content: "";
+position: absolute;
+top: 0;
+left: 0;
+display: block;
+opacity: 0.5; */ 
