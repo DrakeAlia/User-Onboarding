@@ -1,3 +1,9 @@
+import { v4 as uuid } from 'uuid'
+
+const username = uuid().slice(0, 5)
+const email = `${username}@acme.com`
+const hobby1 = 'hiking'
+
 describe('My first Test', function () {
     it('Gets, types and asserts', function () {
      crypto.visit('https://reqres.in/api/users')
@@ -20,15 +26,8 @@ describe('My first Test', function () {
           .type(email)
           .should('have.value', email)
     
-        cy.get('select[name="civil"]')
-          .select(civilStatus1)
-          .should('have.value', civilStatus1)
-          .select(civilStatus2)
-          .should('have.value', civilStatus2)
-    
-        cy.get(`input[name="${hobby1}"]`)
-          .check()
-          .should('have.checked')
+        cy.get('select[name="password"]')
+          .select(password)
     
         cy.contains('submit')
           .click()
