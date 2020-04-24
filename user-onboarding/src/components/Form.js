@@ -51,6 +51,8 @@ const Pre = styled.pre`
 
 const Form =(props) =>{
 
+
+
     const [formState, setFormState] = useState({
         name: "",
         email: "",
@@ -78,7 +80,7 @@ const Form =(props) =>{
         })
     },[formState])
 
-// Craft a `POST` request using `axios` that sends your form data to the following endpoint: _https://reqres.in/api/users_
+    // Craft a `POST` request using `axios` that sends your form data to the following endpoint: _https://reqres.in/api/users_
     const handleSubmit = event => {
         event.preventDefault();
         axios
@@ -194,6 +196,9 @@ const Form =(props) =>{
         {/* Render `users` in your app. You can use the html pre tag and JSON.stringify() method to display your post request. */}
             <Pre>{JSON.stringify(post, null, 2)}</Pre>
         </div>
+
+
+
     )
 }
 
